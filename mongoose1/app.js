@@ -9,6 +9,7 @@ const conn = require("./schemas/connect");
 // 라우터 연결
 const indexRouter = require("./routes/index");
 const userRouter = require("./routes/user");
+const commentRouter = require("./routes/comment");
 
 const app = express();
 
@@ -34,6 +35,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/", indexRouter);
 app.use("/users", userRouter);
+app.use("/comments", commentRouter);
 
 // (404 오류) 없는 경로 요청
 app.use((req, res, next) => {

@@ -1,18 +1,19 @@
 var express = require("express");
 var User = require("../schemas/user");
-const user = require("../schemas/user");
+const Comment = require("../schemas/comment");
 
 // 라우터
 const router = express.Router();
 
 router
-  .get("/", async (req, res, next) => {
+  .route("/")
+  .get(async (req, res, next) => {
     try {
       // db.users.find({})
       const users = await User.find({});
       res.json(users);
     } catch (error) {
-      next(error);
+      next("route.get 에러: ", error);
     }
   })
   .post(async (req, res, next) => {
@@ -28,8 +29,21 @@ router
       res.status(201).json(user);
       // res.json(users);
     } catch (error) {
-      next(error);
+      next("route.post 에러: ", error);
     }
   });
+
+// 특정 user 가 작성한 전체 comment 가져오기
+// /675a3431008c698a752a84ca/comments
+router.get("/:id/comments", async (req, res, next) => {
+  try {
+    const comments = await Comment.find({ commenter: req.params.id }).populate(
+      "commenter"
+    ); // 정말 users 의 commenter 와 맞는지 비교
+    res.json(comments);
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = router;
