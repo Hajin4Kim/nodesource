@@ -2,14 +2,8 @@ const express = require("express");
 const path = require("path");
 const morgan = require("morgan");
 const nunjucks = require("nunjucks");
-
-// DB 연결 모듈 import
-const conn = require("./schemas/connect");
-
-// 라우터 연결
-const indexRouter = require("./routes/index");
-const userRouter = require("./routes/user");
-const commentRouter = require("./routes/comment");
+const connect = require("./schemas/connect");
+const pageRouter = require("./routes/page");
 
 const app = express();
 
@@ -25,8 +19,8 @@ nunjucks.configure("views", {
   watch: true,
 });
 
-// conn 호출 = DB 연결
-conn();
+// 데이터베이스 연결
+connect();
 
 // 미들웨어 연결 (==filter)
 app.use(morgan("dev"));
@@ -34,9 +28,7 @@ app.use("/", express.static(path.join(__dirname, "public"))); //static 파일 �
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use("/", indexRouter);
-app.use("/users", userRouter);
-app.use("/comments", commentRouter);
+app.use("/", pageRouter);
 
 // (404 오류) 없는 경로 요청시
 app.use((req, res, next) => {
