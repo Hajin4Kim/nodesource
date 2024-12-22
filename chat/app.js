@@ -40,7 +40,6 @@ nunjucks.configure("views", {
 // 데이터베이스 연결
 connect();
 
-app.use("/", pageRouter);
 
 // 미들웨어 연결 (==filter)
 app.use(morgan("dev"));
@@ -69,6 +68,9 @@ app.use((req, res, next) => {
   }
   next();
 });
+
+app.use("/", pageRouter);
+
 
 // (404 오류) 없는 경로 요청시
 app.use((req, res, next) => {
